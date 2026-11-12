@@ -50,7 +50,7 @@ window_r = 2.5;
 window_top = 5.5;      // from the plate's top edge to the opening (the display is ~4.7 mm under the glass's top edge)
 lip_h = 0;             // a lip under the opening's edge, to drop into the screen's recess (0: none, a flat back)
 lip_w = 1.2;
-label = "sloop";
+label = "o hai!";
 label_font = "Liberation Sans:style=Bold";
 label_size = 7;
 label_spacing = 1;

@@ -53,7 +53,7 @@ const PARTS = {
       [
         'Text',
         [
-          { k: 'label', label: 'Text', v: 'sloop', text: true },
+          { k: 'label', label: 'Text', v: 'o hai!', text: true },
           { k: 'label_font', label: 'Font', options: FONT_NAMES, v: 'Liberation Sans:style=Bold' },
           { k: 'label_size', label: 'Size', v: 7, step: 0.5 },
           { k: 'label_spacing', label: 'Letter spacing', v: 1, step: 0.05 },
