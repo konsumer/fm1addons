@@ -2,12 +2,12 @@
 
 Knobs and a faceplate with your own text for the [M-VAVE FM-1](https://www.m-vave.com/), as OpenSCAD, with a web page to change them and download STLs.
 
-- **Big flanges**: an encoder knob shaped like a gear
-- **Small flanges**: a knurled encoder knob
-- **Volume**: a knob for the volume pot, closed on top, with a notch to show where it's at
+- **Big flanges**: an encoder knob shaped like a gear, for KNOB1-4 on the right
+- **Small flanges**: a knurled encoder knob, for SELECT, PRESETS and ALGORITHM on the left
+- **Volume**: a knob for the MASTER volume pot, closed on top, with a notch to show where it's at
 - **Faceplate**: the frame around the screen, with your text: raised, engraved (or an inlay), or cut through. It comes in one piece, or as plate and text for two colors
 
-Knobs go on the bare shaft (D-flat or round) or over the stock knob.
+Knobs go on the bare shaft (the FM-1's are 6 mm, round and knurled) or over the stock knob.
 
 ## The page
 

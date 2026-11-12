@@ -1,16 +1,18 @@
 // Add-ons for the M-VAVE FM-1: knobs for its encoders and its volume pot, and a faceplate around its screen with
 // your own text. Everything prints without supports, the side that sits on the FM-1 down.
 //
-//   part  knob_big     encoder knob with big flanges (a gear)
-//         knob_small   encoder knob with small flanges (knurled)
-//         knob_volume  volume knob, closed on top, with a notch to show its value
+//   part  knob_big     encoder knob with big flanges (a gear), for KNOB1-4 on the right
+//         knob_small   encoder knob with small flanges (knurled), for SELECT, PRESETS and ALGORITHM
+//         knob_volume  MASTER volume knob, closed on top, with a notch to show its value
 //         faceplate    the frame around the screen, with its text
 //         faceplate_base, faceplate_text  the same in two pieces, for printing it in two colors
 //         preview      all of them
 //
 // openscad -D 'part="faceplate"' -D 'label="hello"' -o faceplate.stl fm1addons.scad (tools/stls.sh makes them all)
 //
-// Sizes are in mm. Measure your FM-1: the defaults are a starting point.
+// Sizes are in mm, from the FM-1 (161.5 x 96.5 mm): 8 knobs, all on round knurled 6 mm shafts. On the left, MASTER
+// (the volume pot, which stops at each end) and the SELECT, PRESETS and ALGORITHM encoders, on a 17 mm grid: keep
+// those knobs under 16 mm across. On the right, KNOB1-4, 18.2 mm apart: keep them under 17 mm. Print one to check the fit.
 
 use <fonts/LiberationSans-Bold.ttf>
 use <fonts/LiberationSans-Regular.ttf>
@@ -23,18 +25,18 @@ part = "preview";  // [preview, knob_big, knob_small, knob_volume, faceplate, fa
 /* [Encoders: how the knobs hold on] */
 enc_mount = "shaft";  // [shaft, cap] shaft: onto the bare shaft (stock knob off); cap: over the stock knob
 enc_shaft_d = 6;      // shaft's diameter
-enc_shaft_flat = 4.5; // across its D-flat (the same as its diameter: round, or knurled)
-enc_shaft_depth = 9;  // how far the shaft goes in
-enc_cap_d = 10;       // cap: the stock knob's diameter
+enc_shaft_flat = 6;   // across its D-flat, if it has one (the same as its diameter: round, or knurled like the FM-1's)
+enc_shaft_depth = 7.5; // how far the shaft goes in
+enc_cap_d = 8;        // cap: the stock knob's diameter (about 8)
 enc_cap_h = 8;        // cap: how tall it is
 enc_fit = 0.15;       // added to the holes (less, or below 0: tighter)
 
 /* [Big flanges] */
-big_d = 14;         // the body
+big_d = 12;         // the body
 big_h = 14;
 big_flanges = 8;
-big_flange_d = 20;  // across the flanges' tips
-big_flange_w = 4.5; // each flange's width
+big_flange_d = 17;  // across the flanges' tips (KNOB1-4 are 18.2 mm apart)
+big_flange_w = 4;   // each flange's width
 big_open = true;    // open on top
 big_hole_d = 8;     // the opening
 
@@ -42,7 +44,7 @@ big_hole_d = 8;     // the opening
 small_d = 13;
 small_h = 12;
 small_flanges = 16;
-small_flange_d = 15;
+small_flange_d = 15; // the left knobs are 17 mm apart
 small_flange_w = 1.8;
 small_open = true;
 small_hole_d = 7.5;
@@ -50,9 +52,9 @@ small_hole_d = 7.5;
 /* [Volume pot] */
 pot_mount = "shaft";  // [shaft, cap]
 pot_shaft_d = 6;
-pot_shaft_flat = 4.5;
-pot_shaft_depth = 8;
-pot_cap_d = 10;
+pot_shaft_flat = 6;
+pot_shaft_depth = 7.5;
+pot_cap_d = 8;
 pot_cap_h = 8;
 pot_fit = 0.15;
 vol_d = 13;
@@ -62,17 +64,17 @@ vol_flange_d = 15;
 vol_flange_w = 1.8;
 notch_w = 1.4;      // the notch: its width
 notch_depth = 1;    // how deep
-notch_angle = 0;    // where it points: 0 is the D-flat's side, counterclockwise
+notch_angle = 0;    // where it points: 0 is the D-flat's side (+y), counterclockwise
 notch_side = true;  // down the side too
 
 /* [Faceplate] */
-plate = [40, 50];      // outside: width, height
+plate = [40, 46];      // outside: width, height. The screen's black glass is 38 x 38, with ~10 mm under it to the keys
 plate_r = 5;           // its corners
 plate_t = 1.6;         // thickness
 plate_bevel = 0.6;     // the top edge's chamfer
-window = [30, 33];     // the screen's opening
+window = [32, 29];     // the screen's opening (the display is about 32 x 28.5)
 window_r = 2.5;
-window_top = 4;        // from the plate's top edge to the opening
+window_top = 5.5;      // from the plate's top edge to the opening (the display is ~4.7 mm under the glass's top edge)
 lip_h = 0;             // a lip under the opening's edge, to drop into the screen's recess (0: none, a flat back)
 lip_w = 1.2;
 label = "sloop";

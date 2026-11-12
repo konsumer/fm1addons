@@ -12,9 +12,9 @@ const STORE = 'fm1addons'
 const MOUNT = (p, what) => [
   { k: `${p}_mount`, label: 'Mount', options: { shaft: 'On the bare shaft', cap: 'Over the stock knob' }, v: 'shaft', note: `How it holds on to the ${what}` },
   { k: `${p}_shaft_d`, label: 'Shaft diameter', v: 6, when: [`${p}_mount`, 'shaft'] },
-  { k: `${p}_shaft_flat`, label: 'Across its D-flat', v: 4.5, when: [`${p}_mount`, 'shaft'], note: 'The same as its diameter: round or knurled' },
-  { k: `${p}_shaft_depth`, label: 'Shaft goes in', v: p === 'pot' ? 8 : 9, when: [`${p}_mount`, 'shaft'] },
-  { k: `${p}_cap_d`, label: 'Stock knob diameter', v: 10, when: [`${p}_mount`, 'cap'] },
+  { k: `${p}_shaft_flat`, label: 'Across its D-flat', v: 6, when: [`${p}_mount`, 'shaft'], note: 'The same as its diameter: round or knurled (the FM-1’s are knurled)' },
+  { k: `${p}_shaft_depth`, label: 'Shaft goes in', v: 7.5, when: [`${p}_mount`, 'shaft'] },
+  { k: `${p}_cap_d`, label: 'Stock knob diameter', v: 8, when: [`${p}_mount`, 'cap'] },
   { k: `${p}_cap_h`, label: 'Stock knob height', v: 8, when: [`${p}_mount`, 'cap'] },
   { k: `${p}_fit`, label: 'Fit', v: 0.15, step: 0.05, min: -1, note: 'Added to the hole: less is tighter' }
 ]
@@ -35,7 +35,7 @@ const PARTS = {
     name: 'Big flanges',
     color: '#7bc043',
     groups: [
-      ['Knob', [...BODY('big', { d: 14, h: 14, n: 8, fd: 20, fw: 4.5 }), ...OPEN('big', 8)]],
+      ['Knob', [...BODY('big', { d: 12, h: 14, n: 8, fd: 17, fw: 4 }), ...OPEN('big', 8)]],
       ['Fit (shared by both encoder knobs)', MOUNT('enc', 'encoder')]
     ]
   },
@@ -57,7 +57,7 @@ const PARTS = {
         [
           { k: 'notch_w', label: 'Width', v: 1.4, step: 0.1 },
           { k: 'notch_depth', label: 'Depth', v: 1, step: 0.1 },
-          { k: 'notch_angle', label: 'Angle', v: 0, step: 15, min: -360, note: 'Degrees from the D-flat, counterclockwise' },
+          { k: 'notch_angle', label: 'Angle', v: 0, step: 15, min: -360, note: 'Degrees counterclockwise from +y (the D-flat’s side, if it has one)' },
           { k: 'notch_side', label: 'Down the side too', v: true }
         ]
       ],
@@ -86,7 +86,7 @@ const PARTS = {
       [
         'Plate',
         [
-          { k: 'plate', label: 'Width × height', v: [40, 50] },
+          { k: 'plate', label: 'Width × height', v: [40, 46] },
           { k: 'plate_r', label: 'Corner radius', v: 5 },
           { k: 'plate_t', label: 'Thickness', v: 1.6, step: 0.1 },
           { k: 'plate_bevel', label: 'Edge chamfer', v: 0.6, step: 0.1 }
@@ -95,9 +95,9 @@ const PARTS = {
       [
         'Screen opening',
         [
-          { k: 'window', label: 'Width × height', v: [30, 33] },
+          { k: 'window', label: 'Width × height', v: [32, 29] },
           { k: 'window_r', label: 'Corner radius', v: 2.5, step: 0.5 },
-          { k: 'window_top', label: 'From the top edge', v: 4, step: 0.5 },
+          { k: 'window_top', label: 'From the top edge', v: 5.5, step: 0.5 },
           { k: 'lip_h', label: 'Lip under it', v: 0, step: 0.1, note: 'Drops into the screen’s recess to line it up (0: a flat back)' },
           { k: 'lip_w', label: 'Lip width', v: 1.2, step: 0.1, when: ['lip_h', '>0'] }
         ]
