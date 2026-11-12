@@ -10,58 +10,39 @@ const FONT_NAMES = { 'Liberation Sans:style=Bold': 'Sans bold', 'Liberation Sans
 const STORE = 'fm1addons-v2'
 
 // the settings: each one is the OpenSCAD file's variable of the same name, with its default
-const MOUNT = (p, what) => [
-  { k: `${p}_mount`, label: 'Mount', options: { shaft: 'On the bare shaft', cap: 'Over the stock knob' }, v: 'shaft', note: `How it holds on to the ${what}` },
-  { k: `${p}_shaft_d`, label: 'Shaft diameter', v: 6, when: [`${p}_mount`, 'shaft'] },
-  { k: `${p}_shaft_depth`, label: 'Shaft goes in', v: 7.5, when: [`${p}_mount`, 'shaft'] },
-  { k: `${p}_cap_d`, label: 'Stock knob diameter', v: 8, when: [`${p}_mount`, 'cap'] },
-  { k: `${p}_cap_h`, label: 'Stock knob height', v: 8, when: [`${p}_mount`, 'cap'] },
-  { k: `${p}_fit`, label: 'Fit', v: 0.15, step: 0.05, min: -1, note: 'Added to the hole: less is tighter' }
-]
-const BODY = (p, d) => [
-  { k: `${p}_d`, label: 'Body diameter', v: d.d },
-  { k: `${p}_h`, label: 'Height', v: d.h },
-  { k: `${p}_flanges`, label: 'Flanges', v: d.n, step: 1, min: 0 },
-  { k: `${p}_flange_d`, label: 'Across the flanges', v: d.fd },
-  { k: `${p}_flange_w`, label: 'Flange width', v: d.fw, step: 0.1 }
-]
-const OPEN = (p, d) => [
-  { k: `${p}_open`, label: 'Open on top', v: true },
-  { k: `${p}_hole_d`, label: 'Opening', v: d, when: [`${p}_open`, true] }
-]
-
 const PARTS = {
-  knob_big: {
-    name: 'Big flanges',
-    color: '#7bc043',
-    groups: [
-      ['Knob', [...BODY('big', { d: 12, h: 14, n: 8, fd: 17, fw: 4 }), ...OPEN('big', 8)]],
-      ['Fit (shared by both encoder knobs)', MOUNT('enc', 'encoder')]
-    ]
-  },
-  knob_small: {
-    name: 'Small flanges',
+  knob: {
+    name: 'Knob',
     color: '#e8e8e8',
     groups: [
-      ['Knob', [...BODY('small', { d: 13, h: 12, n: 16, fd: 15, fw: 1.8 }), ...OPEN('small', 7.5)]],
-      ['Fit (shared by both encoder knobs)', MOUNT('enc', 'encoder')]
-    ]
-  },
-  knob_volume: {
-    name: 'Volume',
-    color: '#e8443a',
-    groups: [
-      ['Knob', BODY('vol', { d: 13, h: 12, n: 16, fd: 15, fw: 1.8 })],
       [
-        'Notch',
+        'Knob',
         [
-          { k: 'notch_w', label: 'Width', v: 1.4, step: 0.1 },
-          { k: 'notch_depth', label: 'Depth', v: 1, step: 0.1 },
-          { k: 'notch_angle', label: 'Angle', v: 0, step: 15, min: -360, note: 'Degrees counterclockwise from the back (+y)' },
-          { k: 'notch_side', label: 'Down the side too', v: true }
+          { k: 'grip', label: 'Grip', options: { knurled: 'Knurled', gear: 'Gear', smooth: 'Smooth' }, v: 'knurled' },
+          { k: 'knob_d', label: 'Diameter', v: 15, note: 'Under 16 on the left, 17 on the right' },
+          { k: 'knob_h', label: 'Height', v: 12 },
+          { k: 'knob_open', label: 'Open on top', v: true },
+          { k: 'knob_hole_d', label: 'Opening', v: 7.5, when: ['knob_open', true] }
         ]
       ],
-      ['Fit', MOUNT('pot', 'volume pot')]
+      [
+        'Value indicator',
+        [
+          { k: 'indicator', label: 'Show where it’s turned to', v: false, note: 'For MASTER, which stops at each end' },
+          { k: 'indicator_w', label: 'Width', v: 1.4, step: 0.1, when: ['indicator', true] },
+          { k: 'indicator_depth', label: 'Depth', v: 1, step: 0.1, when: ['indicator', true] },
+          { k: 'indicator_angle', label: 'Angle', v: 0, step: 15, min: -360, note: 'Degrees counterclockwise from the back', when: ['indicator', true] },
+          { k: 'indicator_side', label: 'Down the side too', v: true, when: ['indicator', true] }
+        ]
+      ],
+      [
+        'Fit',
+        [
+          { k: 'shaft_d', label: 'Shaft diameter', v: 6, note: 'Round and knurled' },
+          { k: 'shaft_depth', label: 'Shaft goes in', v: 7.5 },
+          { k: 'fit', label: 'Fit', v: 0.15, step: 0.05, min: -1, note: 'Added to the hole: less is tighter' }
+        ]
+      ]
     ]
   },
   faceplate: {
@@ -419,10 +400,6 @@ function init() {
   const build = () => {
     const p = PARTS[part]
     form.innerHTML = p.groups.map(([title, fields]) => `<fieldset><legend>${title}</legend><div class="grid">${fields.filter(shows).map(fieldHtml).join('')}</div></fieldset>`).join('')
-    if (part === 'faceplate') {
-      form.insertAdjacentHTML('beforeend', `<fieldset><legend>Your own font</legend><label class="field wide"><span>A .ttf or .otf file</span><input type="file" id="font-file" accept=".ttf,.otf,font/ttf,font/otf" /><small>${custom ? `Using ${custom.name.replace(':style=', ' ')}` : 'Stays in your browser'}</small></label></fieldset>`)
-      $('#font-file').onchange = pickFont
-    }
     const t = form.querySelector('[data-k=label]')
     if (t) {
       t.value = values.label
