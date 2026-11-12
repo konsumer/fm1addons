@@ -1,0 +1,9 @@
+{
+  "name": "fm1addons",
+  "private": true,
+  "scripts": {
+    "fmt": "npx -y prettier -w site README.md",
+    "start": "npx -y live-server site --mount=/scad:./scad",
+    "stls": "tools/stls.sh"
+  }
+}
