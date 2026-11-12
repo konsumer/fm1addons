@@ -6,13 +6,13 @@ const OPENSCAD = 'https://cdn.jsdelivr.net/npm/openscad-wasm-prebuilt@1.2.0/dist
 const BASES = ['scad/', '../scad/', 'https://raw.githubusercontent.com/konsumer/fm1addons/main/scad/']
 const FONTS = ['LiberationSans-Bold.ttf', 'LiberationSans-Regular.ttf', 'LiberationMono-Bold.ttf', 'LiberationSerif-Bold.ttf']
 const FONT_NAMES = { 'Liberation Sans:style=Bold': 'Sans bold', 'Liberation Sans:style=Regular': 'Sans', 'Liberation Mono:style=Bold': 'Mono bold', 'Liberation Serif:style=Bold': 'Serif bold' }
-const STORE = 'fm1addons'
+// v2: only what differs from the defaults is kept, so new defaults reach everyone (v1 kept all of it)
+const STORE = 'fm1addons-v2'
 
 // the settings: each one is the OpenSCAD file's variable of the same name, with its default
 const MOUNT = (p, what) => [
   { k: `${p}_mount`, label: 'Mount', options: { shaft: 'On the bare shaft', cap: 'Over the stock knob' }, v: 'shaft', note: `How it holds on to the ${what}` },
   { k: `${p}_shaft_d`, label: 'Shaft diameter', v: 6, when: [`${p}_mount`, 'shaft'] },
-  { k: `${p}_shaft_flat`, label: 'Across its D-flat', v: 6, when: [`${p}_mount`, 'shaft'], note: 'The same as its diameter: round or knurled (the FM-1’s are knurled)' },
   { k: `${p}_shaft_depth`, label: 'Shaft goes in', v: 7.5, when: [`${p}_mount`, 'shaft'] },
   { k: `${p}_cap_d`, label: 'Stock knob diameter', v: 8, when: [`${p}_mount`, 'cap'] },
   { k: `${p}_cap_h`, label: 'Stock knob height', v: 8, when: [`${p}_mount`, 'cap'] },
@@ -57,7 +57,7 @@ const PARTS = {
         [
           { k: 'notch_w', label: 'Width', v: 1.4, step: 0.1 },
           { k: 'notch_depth', label: 'Depth', v: 1, step: 0.1 },
-          { k: 'notch_angle', label: 'Angle', v: 0, step: 15, min: -360, note: 'Degrees counterclockwise from +y (the D-flat’s side, if it has one)' },
+          { k: 'notch_angle', label: 'Angle', v: 0, step: 15, min: -360, note: 'Degrees counterclockwise from the back (+y)' },
           { k: 'notch_side', label: 'Down the side too', v: true }
         ]
       ],
@@ -372,7 +372,11 @@ function init() {
     status.textContent = text
     status.className = `note${bad ? ' bad' : ''}`
   }
-  const save = () => saveState({ part, values, colors })
+  const save = () => {
+    const d = defaults()
+    const changed = Object.fromEntries(Object.entries(values).filter(([k, v]) => JSON.stringify(v) !== JSON.stringify(d[k])))
+    saveState({ part, values: changed, colors })
+  }
 
   // the part's settings, as a form
   const shows = (f) => {

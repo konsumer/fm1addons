@@ -24,8 +24,7 @@ part = "preview";  // [preview, knob_big, knob_small, knob_volume, faceplate, fa
 
 /* [Encoders: how the knobs hold on] */
 enc_mount = "shaft";  // [shaft, cap] shaft: onto the bare shaft (stock knob off); cap: over the stock knob
-enc_shaft_d = 6;      // shaft's diameter
-enc_shaft_flat = 6;   // across its D-flat, if it has one (the same as its diameter: round, or knurled like the FM-1's)
+enc_shaft_d = 6;      // shaft's diameter (round, knurled)
 enc_shaft_depth = 7.5; // how far the shaft goes in
 enc_cap_d = 8;        // cap: the stock knob's diameter (about 8)
 enc_cap_h = 8;        // cap: how tall it is
@@ -52,7 +51,6 @@ small_hole_d = 7.5;
 /* [Volume pot] */
 pot_mount = "shaft";  // [shaft, cap]
 pot_shaft_d = 6;
-pot_shaft_flat = 6;
 pot_shaft_depth = 7.5;
 pot_cap_d = 8;
 pot_cap_h = 8;
@@ -64,7 +62,7 @@ vol_flange_d = 15;
 vol_flange_w = 1.8;
 notch_w = 1.4;      // the notch: its width
 notch_depth = 1;    // how deep
-notch_angle = 0;    // where it points: 0 is the D-flat's side (+y), counterclockwise
+notch_angle = 0;    // where it points: 0 is the back (+y), counterclockwise
 notch_side = true;  // down the side too
 
 /* [Faceplate] */
@@ -102,18 +100,10 @@ module flanged(d, n, fd, fw) {
       }
 }
 
-// a hole for a shaft: round, with a D-flat on +y
-module shaft_hole(d, flat, fit) {
-  r = (d + fit) / 2;
-  intersection() {
-    circle(r = r);
-    translate([-r, -r]) square([2 * r, flat - d / 2 + fit / 2 + r]);
-  }
-}
 
 // a knob, from z = 0 (the side on the FM-1) up. open: a hole hole_d across from the top to where the shaft (or the
 // stock knob) ends
-module knob(d, h, n, fd, fw, mount, shaft_d, flat, depth, cap_d, cap_h, fit, open = false, hole_d = 0, c = 0.8) {
+module knob(d, h, n, fd, fw, mount, shaft_d, depth, cap_d, cap_h, fit, open = false, hole_d = 0, c = 0.8) {
   r = max(d, fd) / 2;
   inside = mount == "cap" ? cap_h : depth;
   assert(inside < h - (open ? 0 : 1), "the knob is too short for what goes in it");
@@ -125,7 +115,7 @@ module knob(d, h, n, fd, fw, mount, shaft_d, flat, depth, cap_d, cap_h, fit, ope
     }
     translate([0, 0, -eps]) linear_extrude(inside + eps) {
       if (mount == "cap") circle(d = cap_d + fit);
-      else shaft_hole(shaft_d, flat, fit);
+      else circle(d = shaft_d + fit);
     }
     // the shaft's hole starts wider: it finds the shaft
     if (mount != "cap") translate([0, 0, -eps]) cylinder(h = 0.6, d1 = shaft_d + fit + 1, d2 = shaft_d + fit);
@@ -134,19 +124,19 @@ module knob(d, h, n, fd, fw, mount, shaft_d, flat, depth, cap_d, cap_h, fit, ope
 }
 
 module knob_big() {
-  knob(big_d, big_h, big_flanges, big_flange_d, big_flange_w, enc_mount, enc_shaft_d, enc_shaft_flat, enc_shaft_depth,
+  knob(big_d, big_h, big_flanges, big_flange_d, big_flange_w, enc_mount, enc_shaft_d, enc_shaft_depth,
        enc_cap_d, enc_cap_h, enc_fit, big_open, big_hole_d);
 }
 
 module knob_small() {
-  knob(small_d, small_h, small_flanges, small_flange_d, small_flange_w, enc_mount, enc_shaft_d, enc_shaft_flat,
+  knob(small_d, small_h, small_flanges, small_flange_d, small_flange_w, enc_mount, enc_shaft_d,
        enc_shaft_depth, enc_cap_d, enc_cap_h, enc_fit, small_open, small_hole_d);
 }
 
 module knob_volume() {
   r = max(vol_d, vol_flange_d) / 2;
   difference() {
-    knob(vol_d, vol_h, vol_flanges, vol_flange_d, vol_flange_w, pot_mount, pot_shaft_d, pot_shaft_flat,
+    knob(vol_d, vol_h, vol_flanges, vol_flange_d, vol_flange_w, pot_mount, pot_shaft_d,
          pot_shaft_depth, pot_cap_d, pot_cap_h, pot_fit);
     // the notch: across the top from near the middle to the edge, and down the side
     rotate(90 + notch_angle) {
