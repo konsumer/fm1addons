@@ -11,15 +11,11 @@ const STORE = 'fm1addons-v2'
 
 // the settings: each one is the OpenSCAD file's variable of the same name, with its default
 const SHAFT = [
-  { k: 'shaft', label: 'Shaft', options: { encoder: 'Encoder (the other 7)', pot: 'MASTER (the volume pot)' }, v: 'encoder', note: 'The encoders have 18 coarse splines; MASTER a finer knurl' },
   { k: 'shaft_d', label: 'Shaft diameter', v: 6 },
-  { k: 'splines', label: 'Ridges in the hole', v: 18, step: 1, when: ['shaft', 'encoder'], note: 'To mesh with its grooves (0: round)' },
-  { k: 'spline_depth', label: 'Ridge depth', v: 0.4, step: 0.05, when: ['shaft', 'encoder'] }
+  { k: 'splines', label: 'Ridges in the hole', v: 18, step: 1, note: 'To mesh with its grooves (0: round)' },
+  { k: 'spline_depth', label: 'Ridge depth', v: 0.3, step: 0.05, when: ['splines', '>0'] }
 ]
-const FIT = [
-  { k: 'fit', label: 'Fit', v: 0.1, step: 0.05, min: -1, when: ['shaft', 'encoder'], note: 'Added to the hole: less is tighter' },
-  { k: 'pot_fit', label: 'Fit', v: 0, step: 0.05, min: -1, when: ['shaft', 'pot'], note: 'Added to the hole: less is tighter' }
-]
+const FIT = [{ k: 'fit', label: 'Fit', v: 0.3, step: 0.05, min: -1, note: 'Added to the hole: less is tighter. The tester’s rings have 0.1 to 0.5' }]
 
 const PARTS = {
   knob: {

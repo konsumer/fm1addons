@@ -2,8 +2,8 @@
 
 Knobs and a faceplate with your own text for the [M-VAVE FM-1](https://www.m-vave.com/), as OpenSCAD, with a web page to change them and download STLs.
 
-- **Knob**: one knob for any of the 8. Its grip is knurled, a gear, or smooth; it's open on top or closed; and it can have a value indicator, for MASTER (the volume pot stops at each end). For the 7 encoders, its hole has 18 ridges that mesh with the shaft's grooves; for MASTER, whose knurl is finer, it's round and holds by friction
-- **Fit tester**: rings with different fits, for the encoders or for MASTER. Print it first, in the filament you'll use, and put the fit that grips best in the knob's settings
+- **Knob**: one knob for any of the 8. Its grip is knurled, a gear, or smooth; it's open on top or closed; and it can have a value indicator, for MASTER (the volume pot stops at each end). Its hole has 18 ridges that mesh with the encoders' grooves, and fits MASTER's finer knurl too
+- **Fit tester**: rings with different fits. Print it first, in the filament you'll use, and put the fit that grips best in the knob's settings
 - **Faceplate**: the frame around the screen, with your text: raised, engraved (or an inlay), or cut through. It comes in one piece, or as plate and text for two colors
 
 Knobs go on the FM-1's shafts: 6 mm, knurled.

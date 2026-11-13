@@ -36,14 +36,13 @@ indicator_angle = 0;   // where it points: 0 is the back (+y), counterclockwise
 indicator_side = true; // down the side too
 
 /* [How the knob holds on] */
-shaft = "encoder";  // [encoder, pot] encoder: the 7 encoders, 18 coarse splines; pot: MASTER, a finer knurl
+// These fit all 8 shafts, printed in PLA (MASTER's, a finer knurl, a little tighter): print the tester to check yours
 shaft_d = 6;        // the shaft's diameter, at its teeth
 shaft_depth = 7.5;  // how far it goes in
-splines = 18;       // encoder: the hole has as many ridges, to mesh with the shaft's grooves (0: a round hole)
-spline_depth = 0.4; // how far they stand in
-fit = 0.1;          // encoder: added to the hole (less, or below 0: tighter)
-pot_fit = 0;        // pot: added to its round hole (it holds by friction)
-tester_fits = [-0.1, 0, 0.1, 0.2, 0.3]; // tester: a ring for each, for the shaft that's set
+splines = 18;       // the hole has as many ridges, to mesh with the encoders' 18 grooves (0: a round hole)
+spline_depth = 0.3; // how far they stand in
+fit = 0.3;          // added to the hole (less, or below 0: tighter)
+tester_fits = [0.1, 0.2, 0.3, 0.4, 0.5]; // tester: a ring for each
 tester_tag = "";    // tester: a letter to label its rings with (A1, A2...), instead of their fits
 
 /* [Faceplate] */
@@ -87,9 +86,9 @@ module ridged(d, n, rh, rw) {
 function grip_ridges(g) = g == "gear" ? [8, 2, 3.5] : g == "knurled" ? [16, 1, 1.8] : [0, 0, 0];
 
 // the hole for the shaft, depth deep from z = 0, and starting wider so it finds the shaft. f: what's added to it
-module shaft_hole(depth, f = shaft == "pot" ? pot_fit : fit) {
+module shaft_hole(depth, f = fit) {
   d = shaft_d + f;
-  n = shaft == "pot" ? 0 : splines;
+  n = splines;
   translate([0, 0, -eps]) {
     linear_extrude(depth + eps) {
       if (n > 0) polygon([for (i = [0:2 * n - 1]) (i % 2 ? d / 2 - spline_depth : d / 2) * [cos(i * 180 / n), sin(i * 180 / n)]]);
@@ -99,7 +98,7 @@ module shaft_hole(depth, f = shaft == "pot" ? pot_fit : fit) {
   }
 }
 
-// rings to find the fit: one for each of tester_fits, for the shaft that's set, joined in a row, each with its label
+// rings to find the fit: one for each of tester_fits, joined in a row, each with its label
 // on its tab (tester_tag and its number, or what it adds to the hole)
 module tester() {
   n = len(tester_fits);
