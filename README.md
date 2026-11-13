@@ -3,7 +3,6 @@
 Knobs and a faceplate with your own text for the [M-VAVE FM-1](https://www.m-vave.com/), as OpenSCAD, with a web page to change them and download STLs.
 
 - **Knob**: one knob for any of the 8. Its grip is knurled, a gear, or smooth; it's open on top or closed; and it can have a value indicator, for MASTER (the volume pot stops at each end). Its hole has 18 ridges that mesh with the encoders' grooves, and fits MASTER's finer knurl too
-- **Fit tester**: rings with different fits. Print it first, in the filament you'll use, and put the fit that grips best in the knob's settings
 - **Faceplate**: the frame around the screen, with your text: raised, engraved (or an inlay), or cut through. It comes in one piece, or as plate and text for two colors
 
 Knobs go on the FM-1's shafts: 6 mm, knurled.
@@ -20,6 +19,6 @@ Knobs go on the FM-1's shafts: 6 mm, knurled.
 openscad -D 'part="faceplate"' -D 'label="hello"' -o faceplate.stl scad/fm1addons.scad
 ```
 
-The defaults are a starting point: measure your FM-1, and print one to check the fit.
+The defaults fit the FM-1: they're tested on one, printed in PLA.
 
 The fonts in `scad/fonts` are [Liberation](https://github.com/liberationfonts/liberation-fonts) (SIL Open Font License, `scad/fonts/LICENSE-Liberation`).

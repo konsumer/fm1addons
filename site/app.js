@@ -15,7 +15,7 @@ const SHAFT = [
   { k: 'splines', label: 'Ridges in the hole', v: 18, step: 1, note: 'To mesh with its grooves (0: round)' },
   { k: 'spline_depth', label: 'Ridge depth', v: 0.3, step: 0.05, when: ['splines', '>0'] }
 ]
-const FIT = [{ k: 'fit', label: 'Fit', v: 0.3, step: 0.05, min: -1, note: 'Added to the hole: less is tighter. The tester’s rings have 0.1 to 0.5' }]
+const FIT = [{ k: 'fit', label: 'Fit', v: 0.3, step: 0.05, min: -1, note: 'Added to the hole: less is tighter' }]
 
 const PARTS = {
   knob: {
@@ -44,12 +44,6 @@ const PARTS = {
       ],
       ['Fit', [...SHAFT, { k: 'shaft_depth', label: 'Shaft goes in', v: 7.5 }, ...FIT]]
     ]
-  },
-  tester: {
-    name: 'Fit tester',
-    color: '#7bc043',
-    note: 'Print it first, in the filament you’ll use: rings with the fits written on them. Put the one that grips best in Fit',
-    groups: [['Shaft', SHAFT]]
   },
   faceplate: {
     name: 'Faceplate',
@@ -405,7 +399,7 @@ function init() {
   }
   const build = () => {
     const p = PARTS[part]
-    form.innerHTML = (p.note ? `<p class="note">${p.note}.</p>` : '') + p.groups.map(([title, fields]) => `<fieldset><legend>${title}</legend><div class="grid">${fields.filter(shows).map(fieldHtml).join('')}</div></fieldset>`).join('')
+    form.innerHTML = p.groups.map(([title, fields]) => `<fieldset><legend>${title}</legend><div class="grid">${fields.filter(shows).map(fieldHtml).join('')}</div></fieldset>`).join('')
     const t = form.querySelector('[data-k=label]')
     if (t) {
       t.value = values.label

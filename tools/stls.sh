@@ -1,5 +1,5 @@
 #!/bin/sh
-# Every part with its defaults: the fit tester, and the knob with each grip, with and without MASTER's indicator, as STLs in build/: needs openscad (a 2025+ snapshot, for --backend=manifold)
+# Every part with its defaults: the knob with each grip, with and without MASTER's indicator, as STLs in build/: needs openscad (a 2025+ snapshot, for --backend=manifold)
 #   tools/stls.sh                  the faceplate says "o hai!"
 #   tools/stls.sh "my text"        or this
 set -e
@@ -13,8 +13,6 @@ for part in faceplate faceplate_base faceplate_text; do
   openscad $backend -q -D "part=\"$part\"" -D "label=\"$label\"" --export-format=binstl -o "$out/fm1-$part.stl" scad/fm1addons.scad
   echo "$out/fm1-$part.stl"
 done
-openscad $backend -q -D 'part="tester"' --export-format=binstl -o "$out/fm1-tester.stl" scad/fm1addons.scad
-echo "$out/fm1-tester.stl"
 for grip in knurled gear smooth; do
   for indicator in false true; do
     # with its indicator, it's for MASTER
