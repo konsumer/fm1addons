@@ -44,6 +44,7 @@ spline_depth = 0.4; // how far they stand in
 fit = 0.1;          // encoder: added to the hole (less, or below 0: tighter)
 pot_fit = 0;        // pot: added to its round hole (it holds by friction)
 tester_fits = [-0.1, 0, 0.1, 0.2, 0.3]; // tester: a ring for each, for the shaft that's set
+tester_tag = "";    // tester: a letter to label its rings with (A1, A2...), instead of their fits
 
 /* [Faceplate] */
 plate = [40, 46];      // outside: width, height. The screen's black glass is 38 x 38, with ~10 mm under it to the keys
@@ -98,13 +99,18 @@ module shaft_hole(depth, f = shaft == "pot" ? pot_fit : fit) {
   }
 }
 
-// rings to find the fit: one for each of tester_fits, for the shaft that's set, with what it adds on its tab
+// rings to find the fit: one for each of tester_fits, for the shaft that's set, joined in a row, each with its label
+// on its tab (tester_tag and its number, or what it adds to the hole)
 module tester() {
-  for (i = [0:len(tester_fits) - 1]) translate([i * 13, 0, 0]) difference() {
+  n = len(tester_fits);
+  translate([-3, 8, 0]) cube([(n - 1) * 13 + 6, 2, 1.2]);
+  for (i = [0:n - 1]) translate([i * 13, 0, 0]) difference() {
     union() {
       cylinder(h = 5, d = 10.5);
-      translate([-3, 4, 0]) cube([6, 6, 2]);
-      translate([0, 7.5, 2 - eps]) linear_extrude(0.6) text(str(tester_fits[i]), size = 2.2, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
+      translate([-3.5, 4, 0]) cube([7, 6, 2]);
+      translate([0, 7.3, 2 - eps]) linear_extrude(0.6)
+        text(tester_tag == "" ? str(tester_fits[i]) : str(tester_tag, i + 1), size = tester_tag == "" ? 2.2 : 3,
+             font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
     }
     shaft_hole(5 + 1, tester_fits[i]);
   }
