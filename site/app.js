@@ -10,6 +10,17 @@ const FONT_NAMES = { 'Liberation Sans:style=Bold': 'Sans bold', 'Liberation Sans
 const STORE = 'fm1addons-v2'
 
 // the settings: each one is the OpenSCAD file's variable of the same name, with its default
+const SHAFT = [
+  { k: 'shaft', label: 'Shaft', options: { encoder: 'Encoder (the other 7)', pot: 'MASTER (the volume pot)' }, v: 'encoder', note: 'The encoders have 18 coarse splines; MASTER a finer knurl' },
+  { k: 'shaft_d', label: 'Shaft diameter', v: 6 },
+  { k: 'splines', label: 'Ridges in the hole', v: 18, step: 1, when: ['shaft', 'encoder'], note: 'To mesh with its grooves (0: round)' },
+  { k: 'spline_depth', label: 'Ridge depth', v: 0.4, step: 0.05, when: ['shaft', 'encoder'] }
+]
+const FIT = [
+  { k: 'fit', label: 'Fit', v: 0.1, step: 0.05, min: -1, when: ['shaft', 'encoder'], note: 'Added to the hole: less is tighter' },
+  { k: 'pot_fit', label: 'Fit', v: 0, step: 0.05, min: -1, when: ['shaft', 'pot'], note: 'Added to the hole: less is tighter' }
+]
+
 const PARTS = {
   knob: {
     name: 'Knob',
@@ -35,15 +46,14 @@ const PARTS = {
           { k: 'indicator_side', label: 'Down the side too', v: true, when: ['indicator', true] }
         ]
       ],
-      [
-        'Fit',
-        [
-          { k: 'shaft_d', label: 'Shaft diameter', v: 6, note: 'Round and knurled' },
-          { k: 'shaft_depth', label: 'Shaft goes in', v: 7.5 },
-          { k: 'fit', label: 'Fit', v: 0.15, step: 0.05, min: -1, note: 'Added to the hole: less is tighter' }
-        ]
-      ]
+      ['Fit', [...SHAFT, { k: 'shaft_depth', label: 'Shaft goes in', v: 7.5 }, ...FIT]]
     ]
+  },
+  tester: {
+    name: 'Fit tester',
+    color: '#7bc043',
+    note: 'Print it first, in the filament you’ll use: rings with the fits written on them. Put the one that grips best in Fit',
+    groups: [['Shaft', SHAFT]]
   },
   faceplate: {
     name: 'Faceplate',
@@ -399,7 +409,7 @@ function init() {
   }
   const build = () => {
     const p = PARTS[part]
-    form.innerHTML = p.groups.map(([title, fields]) => `<fieldset><legend>${title}</legend><div class="grid">${fields.filter(shows).map(fieldHtml).join('')}</div></fieldset>`).join('')
+    form.innerHTML = (p.note ? `<p class="note">${p.note}.</p>` : '') + p.groups.map(([title, fields]) => `<fieldset><legend>${title}</legend><div class="grid">${fields.filter(shows).map(fieldHtml).join('')}</div></fieldset>`).join('')
     const t = form.querySelector('[data-k=label]')
     if (t) {
       t.value = values.label

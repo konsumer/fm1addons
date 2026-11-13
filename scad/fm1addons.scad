@@ -19,7 +19,7 @@ use <fonts/LiberationMono-Bold.ttf>
 use <fonts/LiberationSerif-Bold.ttf>
 
 /* [What] */
-part = "preview";  // [preview, knob, faceplate, faceplate_base, faceplate_text]
+part = "preview";  // [preview, knob, tester, faceplate, faceplate_base, faceplate_text]
 
 /* [Knob] */
 grip = "knurled";   // [knurled, gear, smooth] knurled: small ridges; gear: big ones
@@ -36,9 +36,14 @@ indicator_angle = 0;   // where it points: 0 is the back (+y), counterclockwise
 indicator_side = true; // down the side too
 
 /* [How the knob holds on] */
-shaft_d = 6;        // the shaft's diameter (round, knurled)
+shaft = "encoder";  // [encoder, pot] encoder: the 7 encoders, 18 coarse splines; pot: MASTER, a finer knurl
+shaft_d = 6;        // the shaft's diameter, at its teeth
 shaft_depth = 7.5;  // how far it goes in
-fit = 0.15;         // added to the hole (less, or below 0: tighter)
+splines = 18;       // encoder: the hole has as many ridges, to mesh with the shaft's grooves (0: a round hole)
+spline_depth = 0.4; // how far they stand in
+fit = 0.1;          // encoder: added to the hole (less, or below 0: tighter)
+pot_fit = 0;        // pot: added to its round hole (it holds by friction)
+tester_fits = [-0.1, 0, 0.1, 0.2, 0.3]; // tester: a ring for each, for the shaft that's set
 
 /* [Faceplate] */
 plate = [40, 46];      // outside: width, height. The screen's black glass is 38 x 38, with ~10 mm under it to the keys
@@ -80,6 +85,31 @@ module ridged(d, n, rh, rw) {
 // the grips' ridges: how many, how far they stand out, how wide
 function grip_ridges(g) = g == "gear" ? [8, 2, 3.5] : g == "knurled" ? [16, 1, 1.8] : [0, 0, 0];
 
+// the hole for the shaft, depth deep from z = 0, and starting wider so it finds the shaft. f: what's added to it
+module shaft_hole(depth, f = shaft == "pot" ? pot_fit : fit) {
+  d = shaft_d + f;
+  n = shaft == "pot" ? 0 : splines;
+  translate([0, 0, -eps]) {
+    linear_extrude(depth + eps) {
+      if (n > 0) polygon([for (i = [0:2 * n - 1]) (i % 2 ? d / 2 - spline_depth : d / 2) * [cos(i * 180 / n), sin(i * 180 / n)]]);
+      else circle(d = d);
+    }
+    cylinder(h = 0.6, d1 = d + 1, d2 = d - (n > 0 ? 2 * spline_depth : 0));
+  }
+}
+
+// rings to find the fit: one for each of tester_fits, for the shaft that's set, with what it adds on its tab
+module tester() {
+  for (i = [0:len(tester_fits) - 1]) translate([i * 13, 0, 0]) difference() {
+    union() {
+      cylinder(h = 5, d = 10.5);
+      translate([-3, 4, 0]) cube([6, 6, 2]);
+      translate([0, 7.5, 2 - eps]) linear_extrude(0.6) text(str(tester_fits[i]), size = 2.2, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
+    }
+    shaft_hole(5 + 1, tester_fits[i]);
+  }
+}
+
 module knob(d = knob_d, h = knob_h, g = grip, open = knob_open, hole_d = knob_hole_d, indicator = indicator,
             c = 0.8) {
   rg = grip_ridges(g);
@@ -95,9 +125,7 @@ module knob(d = knob_d, h = knob_h, g = grip, open = knob_open, hole_d = knob_ho
       // a chamfer round the top, and a smaller one round the bottom
       rotate_extrude() polygon([[0, 0], [r - 0.4, 0], [r, 0.4], [r, h - c], [r - c, h], [0, h]]);
     }
-    translate([0, 0, -eps]) cylinder(h = inside + eps, d = shaft_d + fit);
-    // the shaft's hole starts wider: it finds the shaft
-    translate([0, 0, -eps]) cylinder(h = 0.6, d1 = shaft_d + fit + 1, d2 = shaft_d + fit);
+    shaft_hole(inside);
     if (open) translate([0, 0, inside]) cylinder(h = h, d = hole_d);
     if (indicator) rotate(90 + indicator_angle) {
       from = open ? 0 : r * 0.25;
@@ -170,6 +198,7 @@ module faceplate() {
 
 // ----------------------------------------------------------------------------------------------- parts ---
 if (part == "knob") knob();
+else if (part == "tester") tester();
 else if (part == "faceplate") faceplate();
 else if (part == "faceplate_base") faceplate_base();
 else if (part == "faceplate_text") faceplate_text();
